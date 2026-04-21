@@ -133,3 +133,19 @@ class RegisterView(generic.CreateView):
         # Optional: Add a success message
         messages.success(self.request, "Conta criada com sucesso! Agora você pode fazer login.")
         return super().form_valid(form)
+
+
+class UpdateNotesView(LoginRequiredMixin, View):
+     def post(self, request, pk, *args, **kwargs):
+          # Retrieve the book belonging to the current user
+          livro = get_object_or_404(Livro, pk=pk, user=request.user)
+
+          # Get the notes from the POST data
+          notes = request.POST.get('user_notes', '')
+
+          # Update and save
+          livro.user_notes = notes
+          livro.save()
+
+          messages.success(request, f'Notas de "{livro.title}" atualizadas!')
+          return redirect('core:home')

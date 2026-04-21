@@ -23,4 +23,6 @@ urlpatterns = [
     path('remove-book/<int:pk>/', views.RemoveBookView.as_view(), name='remove_book'),
 
     path('register/', views.RegisterView.as_view(), name='register'),
+
+    path('update-notes/<int:pk>/', views.UpdateNotesView.as_view(), name='update_notes'),
 ]

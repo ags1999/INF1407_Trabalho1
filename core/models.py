@@ -8,6 +8,7 @@ class Livro(models.Model):
     cover_url = models.URLField(blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
+    user_notes = models.CharField(max_length=255, blank=True)
 
     class Meta:
         constraints = [

@@ -45,43 +45,54 @@
     <h2>Meus Livros Salvos</h2>
     <table>
     <thead>
-        <tr>
-            <th>Capa</th>
-            <th>Título</th>
-            <th>Autor</th>
-            <th>Ação</th> <!-- Added column -->
-        </tr>
-    </thead>
-    <tbody>
-        {% for livro in livros %}
-        <tr>
-            <td>
-                {% if livro.cover_url %}
-                    <img src="{{ livro.cover_url }}" alt="Capa de {{ livro.title }}" class="capa-livro">
-                {% else %}
-                    <img src="https://placehold.co/128x192?text=Sem+Capa" alt="Capa não disponível" class="capa-livro">
-                {% endif %}
-            </td>
-            <td>{{ livro.title }}</td>
-            <td>{{ livro.author }}</td>
-            <td>
-                <!-- Remove Button Form -->
-                <form action="{% url 'core:remove_book' livro.pk %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit"
-                            style="cursor: pointer; padding: 5px 10px; background-color: #ff4d4d; color: white; border: none; border-radius: 4px;"
-                            onclick="return confirm('Tem certeza que deseja remover este livro?')">
-                        Remover
-                    </button>
-                </form>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="4">Você ainda não possui livros registrados.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+    <tr>
+        <th>Capa</th>
+        <th>Título</th>
+        <th>Autor</th>
+        <th>Notas</th> <!-- New column -->
+        <th>Ação</th>
+    </tr>
+</thead>
+<tbody>
+    {% for livro in livros %}
+    <tr>
+        <td>
+            {% if livro.cover_url %}
+                <img src="{{ livro.cover_url }}" alt="Capa de {{ livro.title }}" class="capa-livro">
+            {% else %}
+                <img src="https://placehold.co/128x192?text=Sem+Capa" alt="Capa não disponível" class="capa-livro">
+            {% endif %}
+        </td>
+        <td>{{ livro.title }}</td>
+        <td>{{ livro.author }}</td>
+        <td>
+            <!-- Notes Update Form -->
+            <form action="{% url 'core:update_notes' livro.pk %}" method="post">
+                {% csrf_token %}
+                <label>
+                    <textarea name="user_notes" rows="2" style="width: 100%; box-sizing: border-box;">{{ livro.user_notes }}</textarea>
+                </label>
+                <button type="submit" style="margin-top: 5px; cursor: pointer; font-size: 0.8em;">Salvar Notas</button>
+            </form>
+        </td>
+        <td>
+            <!-- Remove Button Form -->
+            <form action="{% url 'core:remove_book' livro.pk %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit"
+                        style="cursor: pointer; padding: 5px 10px; background-color: #ff4d4d; color: white; border: none; border-radius: 4px;"
+                        onclick="return confirm('Tem certeza que deseja remover este livro?')">
+                    Remover
+                </button>
+            </form>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5">Você ainda não possui livros registrados.</td>
+    </tr>
+    {% endfor %}
+</tbody>
 </table>
 
 </body>
