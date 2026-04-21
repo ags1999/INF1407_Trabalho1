@@ -5,6 +5,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
+from django.contrib import messages
+from django.shortcuts import get_object_or_404
 
 
 class LoginView(View):
@@ -76,3 +79,45 @@ class SearchView(LoginRequiredMixin, View):
                'error_message': error_message  # Pass the message to the context
           }
           return render(request, 'core/search.html', context)
+
+
+class SaveBookView(LoginRequiredMixin, View):
+     def post(self, request, *args, **kwargs):
+          # Extract data from the POST request
+          google_volume_id = request.POST.get('google_volume_id')
+          title = request.POST.get('title')
+          author = request.POST.get('author')
+          cover_url = request.POST.get('cover_url')
+
+          if google_volume_id:
+               # Create the book associated with the current user
+               # Use get_or_create to avoid duplicates based on the unique constraint
+               livro, created = Livro.objects.get_or_create(
+                    user=request.user,
+                    google_volume_id=google_volume_id,
+                    defaults={
+                         'title': title,
+                         'author': author,
+                         'cover_url': cover_url
+                    }
+               )
+
+               if created:
+                    messages.success(request, f'"{title}" foi adicionado à sua lista!')
+               else:
+                    messages.info(request, f'"{title}" já está na sua lista.')
+
+          # Redirect back to the home view or the previous search
+          return redirect('core:home')
+
+
+class RemoveBookView(LoginRequiredMixin, View):
+     def post(self, request, pk, *args, **kwargs):
+          # Get the book or return 404 if it doesn't exist
+          # Filtering by user ensures a user can only delete their own books
+          livro = get_object_or_404(Livro, pk=pk, user=request.user)
+          title = livro.title
+          livro.delete()
+
+          messages.success(request, f'"{title}" foi removido da sua lista.')
+          return redirect('core:home')

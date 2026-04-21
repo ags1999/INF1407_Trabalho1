@@ -1,4 +1,14 @@
 {% load static %}
+{% if messages %}
+    {% for message in messages %}
+        <div style="padding: 10px; margin-bottom: 10px; border: 1px solid transparent; border-radius: 4px;
+            {% if message.tags == 'success' %} background-color: #d4edda; color: #155724; border-color: #c3e6cb;
+            {% elif message.tags == 'info' %} background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb;
+            {% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -24,35 +34,45 @@
 
     <h2>Meus Livros Salvos</h2>
     <table>
-        <thead>
-            <tr>
-                <th>Capa</th>
-                <th>Título</th>
-                <th>Autor</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            {% for livro in livros %}
-            <tr>
-                <td>
-                    {% if livro.cover_url %}
-                        <img src="{{ livro.cover_url }}" alt="Capa de {{ livro.title }}" class="capa-livro">
-                    {% else %}
-                        <img src="https://placehold.co/1920x1080" alt="Capa não disponível">
-                    {% endif %}
-                </td>
-                <td>{{ livro.title }}</td>
-                <td>{{ livro.author }}</td>
-
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="3">Você ainda não possui livros registrados.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <thead>
+        <tr>
+            <th>Capa</th>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Ação</th> <!-- Added column -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for livro in livros %}
+        <tr>
+            <td>
+                {% if livro.cover_url %}
+                    <img src="{{ livro.cover_url }}" alt="Capa de {{ livro.title }}" class="capa-livro">
+                {% else %}
+                    <img src="https://placehold.co/128x192?text=Sem+Capa" alt="Capa não disponível" class="capa-livro">
+                {% endif %}
+            </td>
+            <td>{{ livro.title }}</td>
+            <td>{{ livro.author }}</td>
+            <td>
+                <!-- Remove Button Form -->
+                <form action="{% url 'core:remove_book' livro.pk %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit"
+                            style="cursor: pointer; padding: 5px 10px; background-color: #ff4d4d; color: white; border: none; border-radius: 4px;"
+                            onclick="return confirm('Tem certeza que deseja remover este livro?')">
+                        Remover
+                    </button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Você ainda não possui livros registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 </body>
 </html>

@@ -15,4 +15,8 @@ urlpatterns = [
     path('home/', views.HomeView.as_view(), name='home'),
 
     path('search/', views.SearchView.as_view(), name='busca'),
+
+    path('save-book/', views.SaveBookView.as_view(), name='save_book'),
+
+    path('remove-book/<int:pk>/', views.RemoveBookView.as_view(), name='remove_book'),
 ]
