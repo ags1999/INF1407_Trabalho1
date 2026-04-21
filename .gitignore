@@ -1,0 +1,23 @@
+excel.py
+random_dates.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+
+# Django
+db.sqlite3
+local_settings.py
+.env
+media/
+staticfiles/
+
+# IDEs
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
