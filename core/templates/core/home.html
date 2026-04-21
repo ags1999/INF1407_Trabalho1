@@ -22,7 +22,17 @@
     </style>
 </head>
 <body>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Minha Biblioteca</h1>
 
+        <!-- Logout Button -->
+        <form action="{% url 'core:logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" style="cursor: pointer; padding: 5px 10px; background-color: #6c757d; color: white; border: none; border-radius: 4px;">
+                Sair
+            </button>
+        </form>
+    </div>
     <h1>Minha Biblioteca</h1>
 
     <form>
