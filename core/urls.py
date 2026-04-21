@@ -21,4 +21,6 @@ urlpatterns = [
     path('save-book/', views.SaveBookView.as_view(), name='save_book'),
 
     path('remove-book/<int:pk>/', views.RemoveBookView.as_view(), name='remove_book'),
+
+    path('register/', views.RegisterView.as_view(), name='register'),
 ]

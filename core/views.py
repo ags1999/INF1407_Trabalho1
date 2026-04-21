@@ -8,7 +8,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views import generic
 
 class LoginView(View):
      def get(self, request, *args, **kwargs):
@@ -121,3 +123,13 @@ class RemoveBookView(LoginRequiredMixin, View):
 
           messages.success(request, f'"{title}" foi removido da sua lista.')
           return redirect('core:home')
+
+class RegisterView(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('core:login')
+    template_name = 'core/register.html'
+
+    def form_valid(self, form):
+        # Optional: Add a success message
+        messages.success(self.request, "Conta criada com sucesso! Agora você pode fazer login.")
+        return super().form_valid(form)
