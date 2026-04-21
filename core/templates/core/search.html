@@ -3,26 +3,23 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Minha Biblioteca</title>
+    <title>Busca</title>
     <style>
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
-        .capa-livro { width: 50px; height: auto; }
+        .capa-livro { width: 100px; height: auto; }
     </style>
 </head>
 <body>
+    <h1>Resultados da Busca</h1>
 
-    <h1>Minha Biblioteca</h1>
+    {% if error_message %}
+        <div style="background-color: #f8d7da; color: #721c24; padding: 15px; border: 1px solid #f5c6cb; border-radius: 4px; margin-bottom: 20px;">
+            {{ error_message }}
+        </div>
+    {% endif %}
 
-    <form>
-        <label for="busca">
-            <input type="text" id="busca" name="busca_livro" placeholder="Buscar um livro" required>
-        </label>
-        <input type="submit" value="Buscar">
-    </form>
-
-    <h2>Meus Livros Salvos</h2>
     <table>
         <thead>
             <tr>
@@ -39,7 +36,7 @@
                     {% if livro.cover_url %}
                         <img src="{{ livro.cover_url }}" alt="Capa de {{ livro.title }}" class="capa-livro">
                     {% else %}
-                        <img src="https://placehold.co/1920x1080" alt="Capa não disponível">
+                        <img src="https://placehold.co/400x300" alt="Capa não disponível">
                     {% endif %}
                 </td>
                 <td>{{ livro.title }}</td>
@@ -47,12 +44,14 @@
 
             </tr>
             {% empty %}
-            <tr>
-                <td colspan="3">Você ainda não possui livros registrados.</td>
-            </tr>
+                {% if not error_message %}
+                    <tr>
+                        <td colspan="3">Nenhum livro encontrado para sua busca.</td>
+                    </tr>
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>
 
+    <p><a href="{% url 'core:home' %}">Voltar para Home</a></p>
 </body>
-</html>
