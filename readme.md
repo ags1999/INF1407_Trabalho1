@@ -10,7 +10,7 @@ O usuário é inicialmente apresentado à tela de login, que contém também um 
 usuários.
 
 Na página Home, são listados os livros cadastrados, e através da barra de busca o usuário pode realizar uma consulta
-através da API Google Books, podendo selecionar uma das opções apresentadas. Também está disponível um campo para
+através da API Google Books, podendo adicionar um dos livros apresentados à lista. Também está disponível um campo para
 a inserção de anotações pessoais em cada livro.
 
 A biblioteca disponibiliza imagens das capas por meio de URLs obtidas do Google Books, que ocasionalmente
