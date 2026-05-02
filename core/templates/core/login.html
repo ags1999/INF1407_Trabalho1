@@ -1,7 +1,27 @@
-<h2>Login</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Acessar</button>
-</form>
-<p>Não tem uma conta? <a href="{% url 'core:register' %}">Cadastre-se aqui</a>.</p>
+{% extends 'core/base.html' %}
+
+{% block title %}Login - Minha Biblioteca{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Login</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <!-- Django forms can be styled with filters, but for now we keep it simple -->
+                    {{ form.as_p }}
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Acessar</button>
+                    </div>
+                </form>
+                <hr>
+                <p class="text-center mb-0">
+                    Não tem uma conta? <a href="{% url 'core:register' %}" class="text-decoration-none">Cadastre-se aqui</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

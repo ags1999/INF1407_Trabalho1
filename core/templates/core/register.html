@@ -1,7 +1,26 @@
-<h2>Criar Nova Conta</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Cadastrar</button>
-</form>
-<p>Já tem uma conta? <a href="{% url 'core:login' %}">Faça login aqui</a>.</p>
+{% extends 'core/base.html' %}
+
+{% block title %}Criar Conta - Minha Biblioteca{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Criar Nova Conta</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Cadastrar</button>
+                    </div>
+                </form>
+                <hr>
+                <p class="text-center mb-0">
+                    Já tem uma conta? <a href="{% url 'core:login' %}" class="text-decoration-none">Faça login aqui</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

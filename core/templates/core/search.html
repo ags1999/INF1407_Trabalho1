@@ -1,78 +1,60 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Busca</title>
-    <style>
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .capa-livro { width: 100px; height: auto; }
-    </style>
-</head>
-<body>
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>Minha Biblioteca</h1>
+{% extends 'core/base.html' %}
 
-        <!-- Logout Button -->
-        <form action="{% url 'core:logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" style="cursor: pointer; padding: 5px 10px; background-color: #6c757d; color: white; border: none; border-radius: 4px;">
-                Sair
-            </button>
-        </form>
-    </div>
+{% block title %}Resultados da Busca - Minha Biblioteca{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Resultados da Busca</h1>
+    <a href="{% url 'core:home' %}" class="btn btn-outline-secondary">Voltar para Home</a>
+</div>
 
-    {% if error_message %}
-        <div style="background-color: #f8d7da; color: #721c24; padding: 15px; border: 1px solid #f5c6cb; border-radius: 4px; margin-bottom: 20px;">
-            {{ error_message }}
-        </div>
-    {% endif %}
+{% if error_message %}
+    <div class="alert alert-danger" role="alert">
+        {{ error_message }}
+    </div>
+{% endif %}
 
-<table>
-    <thead>
-        <tr>
-            <th>Capa</th>
-            <th>Título</th>
-            <th>Autor</th>
-            <th>Ação</th> <!-- New column -->
-        </tr>
-    </thead>
-    <tbody>
-        {% for livro in livros %}
-        <tr>
-            <td>
-                {% if livro.cover_url %}
-                    <img src="{{ livro.cover_url }}" alt="Capa de {{ livro.title }}" class="capa-livro">
-                {% else %}
-                    <img src="https://placehold.co/128x192?text=Sem+Capa" alt="Capa não disponível" class="capa-livro">
-                {% endif %}
-            </td>
-            <td>{{ livro.title }}</td>
-            <td>{{ livro.author }}</td>
-            <td>
-                <!-- Save Button Form -->
-                <form action="{% url 'core:save_book' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="google_volume_id" value="{{ livro.google_volume_id }}">
-                    <input type="hidden" name="title" value="{{ livro.title }}">
-                    <input type="hidden" name="author" value="{{ livro.author }}">
-                    <input type="hidden" name="cover_url" value="{{ livro.cover_url }}">
-                    <button type="submit" style="cursor: pointer; padding: 5px 10px;">Salvar</button>
-                </form>
-            </td>
-        </tr>
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th style="width: 120px;">Capa</th>
+                <th>Título</th>
+                <th>Autor</th>
+                <th class="text-center">Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for livro in livros %}
+            <tr>
+                <td>
+                    {% if livro.cover_url %}
+                        <img src="{{ livro.cover_url }}" alt="Capa de {{ livro.title }}" class="img-thumbnail" style="width: 100px;">
+                    {% else %}
+                        <img src="https://placehold.co/128x192?text=Sem+Capa" alt="Capa não disponível" class="img-thumbnail" style="width: 100px;">
+                    {% endif %}
+                </td>
+                <td><strong>{{ livro.title }}</strong></td>
+                <td>{{ livro.author }}</td>
+                <td class="text-center">
+                    <form action="{% url 'core:save_book' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="google_volume_id" value="{{ livro.google_volume_id }}">
+                        <input type="hidden" name="title" value="{{ livro.title }}">
+                        <input type="hidden" name="author" value="{{ livro.author }}">
+                        <input type="hidden" name="cover_url" value="{{ livro.cover_url }}">
+                        <button type="submit" class="btn btn-primary btn-sm">Salvar</button>
+                    </form>
+                </td>
+            </tr>
             {% empty %}
                 {% if not error_message %}
-                    <tr>
-                        <td colspan="3">Nenhum livro encontrado para sua busca.</td>
-                    </tr>
+                <tr>
+                    <td colspan="4" class="text-center py-4">Nenhum livro encontrado para sua busca.</td>
+                </tr>
                 {% endif %}
             {% endfor %}
         </tbody>
     </table>
-
-    <p><a href="{% url 'core:home' %}">Voltar para Home</a></p>
-</body>
+</div>
+{% endblock %}
