@@ -130,3 +130,6 @@ LOGIN_REDIRECT_URL = 'core:home'
 LOGOUT_REDIRECT_URL = 'core:login'
 
 CSRF_TRUSTED_ORIGINS = ['https://inf1407trabalho1-production.up.railway.app']
+
+AUTH_USER_MODEL = 'core.User'
+

@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
+from core.forms import CustomUserCreationForm
 
 class LoginView(View):
      def get(self, request, *args, **kwargs):
@@ -125,7 +126,7 @@ class RemoveBookView(LoginRequiredMixin, View):
           return redirect('core:home')
 
 class RegisterView(generic.CreateView):
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm # Use the custom form
     success_url = reverse_lazy('core:login')
     template_name = 'core/register.html'
 
