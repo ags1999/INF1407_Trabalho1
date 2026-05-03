@@ -3,6 +3,7 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center">
     <h1>Minha Biblioteca</h1>
+    <p class="text-muted">Olá, {{ user.username }}!</p>
     <form action="{% url 'core:logout' %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-secondary">Sair</button>
