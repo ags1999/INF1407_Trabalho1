@@ -23,6 +23,7 @@
             <th>Capa</th>
             <th>Título</th>
             <th>Autor</th>
+            <th>Notas</th>
             <th>Ações</th>
         </tr>
     </thead>
@@ -39,28 +40,22 @@
                 <td><strong>{{ livro.title }}</strong></td>
                 <td>{{ livro.author }}</td>
                 <td>
-                    <div class="d-flex gap-2">
-                        <!-- Botão para Notas (Opcional) -->
-                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#notes-{{ livro.id }}">
-                            Notas
-                        </button>
+            <form action="{% url 'core:update_notes' livro.pk %}" method="post">
+                {% csrf_token %}
+                <textarea name="user_notes" class="form-control form-control-sm mb-1" rows="2">{{ livro.user_notes }}</textarea>
+                <button type="submit" class="btn btn-sm btn-success w-100">Salvar Notas</button>
+            </form>
+        </td>
 
-                        <!-- Formulário de Remoção -->
-                        <form action="{% url 'core:remove_book' livro.pk %}" method="post" onsubmit="return confirm('Tem certeza que deseja remover este livro?')">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-danger">Remover</button>
-                        </form>
-                    </div>
+        <td>
+            <div class="d-flex gap-2">
 
-                    <!-- Campo de Notas (Collapse) -->
-                    <div class="collapse mt-2" id="notes-{{ livro.id }}">
-                        <form action="{% url 'core:update_notes' livro.pk %}" method="post">
-                            {% csrf_token %}
-                            <textarea name="user_notes" class="form-control form-control-sm mb-1" rows="2">{{ livro.user_notes }}</textarea>
-                            <button type="submit" class="btn btn-sm btn-success w-100">Salvar Notas</button>
-                        </form>
-                    </div>
-                </td>
+                <form action="{% url 'core:remove_book' livro.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">Remover</button>
+                </form>
+            </div>
+        </td>
             </tr>
         {% empty %}
             <tr>
