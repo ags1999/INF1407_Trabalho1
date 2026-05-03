@@ -12,6 +12,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
 from core.forms import CustomUserCreationForm
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from .models import User
 
 class LoginView(View):
      def get(self, request, *args, **kwargs):
@@ -125,16 +132,52 @@ class RemoveBookView(LoginRequiredMixin, View):
           messages.success(request, f'"{title}" foi removido da sua lista.')
           return redirect('core:home')
 
+
 class RegisterView(generic.CreateView):
-    form_class = CustomUserCreationForm # Use the custom form
-    success_url = reverse_lazy('core:login')
-    template_name = 'core/register.html'
+     form_class = CustomUserCreationForm
+     success_url = reverse_lazy('core:login')
+     template_name = 'core/register.html'
 
-    def form_valid(self, form):
-        # Optional: Add a success message
-        messages.success(self.request, "Conta criada com sucesso! Agora você pode fazer login.")
-        return super().form_valid(form)
+     def form_valid(self, form):
+          # Save user as inactive
+          user = form.save(commit=False)
+          user.is_active = False
+          user.save()
 
+          # Build email content
+          current_site = get_current_site(self.request)
+          subject = 'Ative sua conta - Minha Biblioteca'
+          message = render_to_string('core/acc_active_email.html', {
+               'user': user,
+               'domain': current_site.domain,
+               'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+               'token': default_token_generator.make_token(user),
+          })
+
+          # Send email via Resend (configured in settings)
+          send_mail(subject, message, None, [user.email])
+
+          messages.info(self.request,
+                        "Um e-mail de confirmação foi enviado. Por favor, verifique sua caixa de entrada.")
+          return redirect('core:login')
+
+
+class ActivateAccountView(View):
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and default_token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+            messages.success(request, "Sua conta foi ativada com sucesso! Agora você pode fazer login.")
+            return redirect('core:login')
+        else:
+            messages.error(request, "O link de ativação é inválido ou expirou.")
+            return redirect('core:login')
 
 class UpdateNotesView(LoginRequiredMixin, View):
      def post(self, request, pk, *args, **kwargs):

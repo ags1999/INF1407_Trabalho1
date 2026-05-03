@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,10 @@ CSRF_TRUSTED_ORIGINS = ['https://inf1407trabalho1-production.up.railway.app']
 
 AUTH_USER_MODEL = 'core.User'
 
+ANYMAIL = {
+    "RESEND_API_KEY": os.getenv("RESEND_API_KEY"),
+}
+
+EMAIL_BACKEND = "anymail.backends.resend.EmailBackend"
+
+DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
