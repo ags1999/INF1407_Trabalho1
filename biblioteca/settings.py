@@ -139,7 +139,7 @@ LOGIN_URL = 'core:login'
 LOGIN_REDIRECT_URL = 'core:home'
 LOGOUT_REDIRECT_URL = 'core:login'
 
-CSRF_TRUSTED_ORIGINS = ['https://inf1407trabalho1-production.up.railway.app']
+
 
 AUTH_USER_MODEL = 'core.User'
 
@@ -152,3 +152,11 @@ EMAIL_BACKEND = "anymail.backends.resend.EmailBackend"
 #DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
 
 DEFAULT_FROM_EMAIL = "Alexandre Sanson <noreply@agsbiblioteca.dev.br>"
+
+
+
+if not DEBUG:
+    CSRF_TRUSTED_ORIGINS = ['https://inf1407trabalho1-production.up.railway.app', 'https://agsbiblioteca.dev.br']
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
