@@ -1,0 +1,8 @@
+Olá {{ user.username }},
+
+Obrigado por se cadastrar na Minha Biblioteca! 
+Para ativar sua conta, clique no link abaixo:
+
+http://{{ domain }}{% url 'core:activate' uidb64=uid token=token %}
+
+Se você não solicitou este cadastro, ignore este e-mail.
