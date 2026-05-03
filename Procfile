@@ -1,1 +1,1 @@
-web: gunicorn biblioteca.wsgi && python manage.py migrate
+web: gunicorn biblioteca.wsgi && python manage.py collectstatic
