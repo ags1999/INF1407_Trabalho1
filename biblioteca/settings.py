@@ -140,4 +140,6 @@ ANYMAIL = {
 
 EMAIL_BACKEND = "anymail.backends.resend.EmailBackend"
 
-DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
+#DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
+
+DEFAULT_FROM_EMAIL = "Alexandre Sanson <noreply@agsbiblioteca.dev.br>"

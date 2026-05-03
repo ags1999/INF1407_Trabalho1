@@ -18,7 +18,10 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from .models import User
+from core.models import User
+from django.contrib.auth import views as auth_views
+from django.contrib import messages
+from django.urls import reverse_lazy
 
 class LoginView(View):
      def get(self, request, *args, **kwargs):
@@ -193,3 +196,21 @@ class UpdateNotesView(LoginRequiredMixin, View):
 
           messages.success(request, f'Notas de "{livro.title}" atualizadas!')
           return redirect('core:home')
+
+class MyPasswordResetView(auth_views.PasswordResetView):
+    template_name = 'core/password_reset.html'
+    success_url = reverse_lazy('core:login')
+    email_template_name = 'core/password_reset_email.html'
+    subject_template_name = 'core/password_reset_subject.txt'
+
+    def form_valid(self, form):
+        messages.info(self.request, "Se o e-mail informado estiver cadastrado, você receberá instruções para redefinir sua senha.")
+        return super().form_valid(form)
+
+class MyPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = 'core/password_reset_confirm.html'
+    success_url = reverse_lazy('core:login')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Sua senha foi redefinida com sucesso! Agora você pode entrar com a nova senha.")
+        return super().form_valid(form)
