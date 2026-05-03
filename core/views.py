@@ -22,6 +22,8 @@ from core.models import User
 from django.contrib.auth import views as auth_views
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.contrib.auth.forms import PasswordChangeForm
+from .forms import ProfileForm
 
 class LoginView(View):
      def get(self, request, *args, **kwargs):
@@ -213,4 +215,25 @@ class MyPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
 
     def form_valid(self, form):
         messages.success(self.request, "Sua senha foi redefinida com sucesso! Agora você pode entrar com a nova senha.")
+        return super().form_valid(form)
+
+class ProfileView(LoginRequiredMixin, generic.UpdateView):
+    model = User
+    form_class = ProfileForm
+    template_name = 'core/profile.html'
+    success_url = reverse_lazy('core:profile')
+
+    def get_object(self):
+        return self.request.user
+
+    def form_valid(self, form):
+        messages.success(self.request, "Nome de usuário atualizado com sucesso!")
+        return super().form_valid(form)
+
+class MyPasswordChangeView(auth_views.PasswordChangeView):
+    template_name = 'core/password_change.html'
+    success_url = reverse_lazy('core:profile')
+
+    def form_valid(self, form):
+        messages.success(self.request, "Sua senha foi alterada com sucesso!")
         return super().form_valid(form)
