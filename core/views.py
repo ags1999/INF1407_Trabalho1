@@ -1,15 +1,11 @@
 import os
 import requests
 from core.models import Livro
-from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
-from django.contrib import messages
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
 from django.views import generic
 from core.forms import CustomUserCreationForm
 from django.contrib.sites.shortcuts import get_current_site
@@ -22,7 +18,6 @@ from core.models import User
 from django.contrib.auth import views as auth_views
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.contrib.auth.forms import PasswordChangeForm
 from .forms import ProfileForm
 
 class LoginView(View):
